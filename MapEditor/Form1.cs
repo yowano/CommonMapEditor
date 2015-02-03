@@ -184,6 +184,9 @@ namespace MapEditor
             mapData[i] = br.ReadInt32();
           }
 
+          // バッファを更新
+          DrawMapBuf();
+
           // ビューを更新
           DrawMapView();
           DrawSelectedMapSquareView();
@@ -233,6 +236,9 @@ namespace MapEditor
         // 画像を読み込む
         chipsetImageBuf = Image.FromFile( openChipsetDialog.FileName );
       }
+
+      // バッファを更新
+      DrawMapBuf();
 
       // ビューを更新
       DrawMapView();
