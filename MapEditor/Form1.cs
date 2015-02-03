@@ -25,11 +25,12 @@ namespace MapEditor
     int[] mapData;
 
     // バッファ
-    Bitmap mapImageBuf;
+    Image mapImageBuf;
+    Image chipsetImageBuf;
 
     // 選択中
-    int selectedChipID = 0;
     int selectedMapSquareID = 0;
+    int selectedChipID = 0;
 
     // モード
     bool isLocating = false;
@@ -53,10 +54,10 @@ namespace MapEditor
     {
       // バッファ作成
       mapImageBuf = new Bitmap( mapView.Width, mapView.Height );
+      chipsetImageBuf = chipsetView.Image.Clone() as Bitmap;      // デザイナーで設定されたデフォルト画像でバッファを初期化
 
       // ピクチャボックスのイメージ作成
       mapView.Image = new Bitmap( mapView.Width, mapView.Height );
-      //chipsetView.Image = new Bitmap( chipsetView.Width, chipsetView.Height );
       selectedMapSquareView.Image = new Bitmap( selectedMapSquareView.Width, selectedMapSquareView.Height );
       selectedChipView.Image = new Bitmap( selectedChipView.Width, selectedChipView.Height );
 
@@ -68,6 +69,7 @@ namespace MapEditor
 
       // ビュー初期化
       DrawMapView();
+      DrawChipsetView();
       DrawSelectedMapSquareView();
       DrawSelectedChipView();
     }
@@ -154,6 +156,7 @@ namespace MapEditor
       selectedChipYLabel.Text = "Y:" + chipPosOnGrid.Y.ToString();
 
       // ビューの更新
+      DrawChipsetView();
       DrawSelectedChipView();
     }
 
@@ -182,7 +185,6 @@ namespace MapEditor
           // ビューを更新
           DrawMapView();
           DrawSelectedMapSquareView();
-          DrawSelectedChipView();
 
           MessageBox.Show( "マップデータ読み込み完了！" );
         }
@@ -227,11 +229,12 @@ namespace MapEditor
       if( openChipsetDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK )
       {
         // 画像を読み込む
-        chipsetView.Image = Image.FromFile( openChipsetDialog.FileName );
+        chipsetImageBuf = Image.FromFile( openChipsetDialog.FileName );
       }
 
       // ビューを更新
       DrawMapView();
+      DrawChipsetView();
       DrawSelectedMapSquareView();
       DrawSelectedChipView();
 

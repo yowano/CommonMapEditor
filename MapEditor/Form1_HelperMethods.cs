@@ -47,7 +47,7 @@ namespace MapEditor
           Rectangle srcRect = new Rectangle( chipPos, chipSize );
 
           // 描画
-          g.DrawImage( chipsetView.Image, destRect, srcRect, GraphicsUnit.Pixel );
+          g.DrawImage( chipsetImageBuf, destRect, srcRect, GraphicsUnit.Pixel );
         }
       }
     }
@@ -69,24 +69,22 @@ namespace MapEditor
         Rectangle srcRect = new Rectangle( chipPos, chipSize );
 
         // 描画
-        g.DrawImage( chipsetView.Image, destRect, srcRect, GraphicsUnit.Pixel );
+        g.DrawImage( chipsetImageBuf, destRect, srcRect, GraphicsUnit.Pixel );
       }
     }
 
     /// <summary>
-    /// マップバッファを参照してマップビュー全体を描画する
+    /// マップバッファを参照し、マップビューを描画する
     /// </summary>
     private void DrawMapView()
     {
-      // マップビューのイメージにマップバッファの内容をコピー
+      // マップビューのイメージに描画を行う
       using( Graphics g = Graphics.FromImage( mapView.Image ) )
       {
+        // バッファの内容を描画
         g.DrawImage( mapImageBuf, new Point() );
-      }
 
-      // マップビューのイメージに選択中のマスを囲う赤四角形を描画 
-      using( Graphics g = Graphics.FromImage( mapView.Image ) )
-      {
+        // 選択中のマスを囲う赤四角形を描画
         Point point = mapSquareIDToPos( selectedMapSquareID );
         Rectangle rect = new Rectangle( point, chipSize );
         g.DrawRectangle( Pens.Red, rect );
@@ -94,6 +92,27 @@ namespace MapEditor
 
       // 描画を反映
       mapView.Refresh();
+    }
+
+    /// <summary>
+    /// チップセットバッファを参照し、チップセットビューを描画する
+    /// </summary>
+    private void DrawChipsetView()
+    {
+      // チップセットビューのイメージに描画を行う
+      using( Graphics g = Graphics.FromImage( chipsetView.Image ) )
+      {
+        // バッファの内容を描画
+        g.DrawImage( chipsetImageBuf, new Point() );
+
+        // 選択中のチップを囲う赤四角形を描画
+        Point point = chipIDToPos( selectedChipID );
+        Rectangle rect = new Rectangle( point, chipSize );
+        g.DrawRectangle( Pens.Red, rect );
+      }
+
+      // 描画を反映
+      chipsetView.Refresh();
     }
 
     /// <summary>
@@ -112,7 +131,7 @@ namespace MapEditor
         Rectangle srcRect = new Rectangle( chipPos, chipSize );
 
         // 描画
-        g.DrawImage( chipsetView.Image, destRect, srcRect, GraphicsUnit.Pixel );
+        g.DrawImage( chipsetImageBuf, destRect, srcRect, GraphicsUnit.Pixel );
       }
 
       // 描画を反映
@@ -135,7 +154,7 @@ namespace MapEditor
         Rectangle srcRect = new Rectangle( chipPos, chipSize );
 
         // 描画
-        g.DrawImage( chipsetView.Image, destRect, srcRect, GraphicsUnit.Pixel );
+        g.DrawImage( chipsetImageBuf, destRect, srcRect, GraphicsUnit.Pixel );
       }
 
       // 描画を反映
