@@ -81,22 +81,22 @@ namespace MapEditor
     }
 
     /// <summary>
-    /// 選択中マスデータを参照して、選択中マップマスビューを描画する
+    /// 選択中マスデータを参照して、選択中マスビューを描画する
     /// </summary>
     private void DrawSelectedMapSquareView()
     {
       // グラフィックスの作成 
       using( Graphics g = Graphics.FromImage( selectedMapSquareView.Image ) )
       {
-        // 描画元となるマスの左上座標を求める
-        Point mapSquarePos = mapSquareIDToPos( selectedMapSquareID );
+        // 描画元となるチップの左上座標を求める
+        Point chipPos = chipIDToPos( mapData[selectedMapSquareID] );
 
         // 描画先・描画元四角形を求める
         Rectangle destRect = new Rectangle( new Point(), selectedMapSquareView.Size );
-        Rectangle srcRect = new Rectangle( mapSquarePos, chipSize );
+        Rectangle srcRect = new Rectangle( chipPos, chipSize );
 
         // 描画
-        g.DrawImage( mapView.Image, destRect, srcRect, GraphicsUnit.Pixel );
+        g.DrawImage( chipsetView.Image, destRect, srcRect, GraphicsUnit.Pixel );
       }
 
       // 描画を反映
