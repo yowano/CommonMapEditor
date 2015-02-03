@@ -13,7 +13,7 @@ namespace MapEditor
   public partial class Form1 : Form
   {
     /// <summary>
-    /// 選択中マスと選択中チップデータを参照して、マップデータの更新（チップ設置）を行う
+    /// 選択中マスと選択中チップデータを参照して、マップデータへチップ情報を書き込み、マップバッファを更新する
     /// </summary>
     private void LocateChip()
     {
@@ -23,24 +23,24 @@ namespace MapEditor
       // マップデータに書き込み（チップを設置）
       mapData[selectedMapSquareID] = selectedChipID;
 
-      // マップビューのうち、チップが置かれた場所のみ再描画
-      DrawMapView( selectedMapSquareID );
+      // マップバッファ更新
+      DrawMapBuf( selectedMapSquareID );
     }
 
     /// <summary>
-    /// マップデータを参照してマップビュー全体を描画する
+    /// 全てのマップデータを参照し、マップバッファの全体の描画を行う
     /// </summary>
-    private void DrawMapView()
+    private void DrawMapBuf()
     {
       // グラフィックスの作成 
-      using( Graphics g = Graphics.FromImage( mapView.Image ) )
+      using( Graphics g = Graphics.FromImage( mapImageBuf ) )
       {
         // 配列要素の数だけ繰り返す
         for( int i = 0; i < mapData.Length; i++ )
         {
           // マスの座標を求める
           Point mapSquarePos = mapSquareIDToPos( i ); // 描画先となるマップ上のマスの左上座標
-          Point chipPos = chipIDToPos( mapData[i] );    // 描画元となるチップセット上のマスの左上座標
+          Point chipPos = chipIDToPos( mapData[i] );  // 描画元となるチップセット上のマスの左上座標
 
           // 描画先・描画元四角形を求める
           Rectangle destRect = new Rectangle( mapSquarePos, chipSize );
@@ -50,19 +50,15 @@ namespace MapEditor
           g.DrawImage( chipsetView.Image, destRect, srcRect, GraphicsUnit.Pixel );
         }
       }
-
-      // 描画を反映
-      mapView.Refresh();
     }
 
     /// <summary>
-    /// マップデータを参照してマップビューの一部分のみ描画を行う
-    /// 
+    /// マップスクエアIDを用いてマップデータを参照し、マップバッファの一部分のみ描画を行う
     /// </summary>
-    private void DrawMapView( int mapSquareID )
+    private void DrawMapBuf( int mapSquareID )
     {
       // グラフィックスの作成 
-      using( Graphics g = Graphics.FromImage( mapView.Image ) )
+      using( Graphics g = Graphics.FromImage( mapImageBuf ) )
       {
         // マスの座標を求める
         Point mapSquarePos = mapSquareIDToPos( mapSquareID ); // 描画先となるマップ上のマスの左上座標
@@ -74,6 +70,26 @@ namespace MapEditor
 
         // 描画
         g.DrawImage( chipsetView.Image, destRect, srcRect, GraphicsUnit.Pixel );
+      }
+    }
+
+    /// <summary>
+    /// マップバッファを参照してマップビュー全体を描画する
+    /// </summary>
+    private void DrawMapView()
+    {
+      // マップビューのイメージにマップバッファの内容をコピー
+      using( Graphics g = Graphics.FromImage( mapView.Image ) )
+      {
+        g.DrawImage( mapImageBuf, new Point() );
+      }
+
+      // マップビューのイメージに選択中のマスを囲う赤四角形を描画 
+      using( Graphics g = Graphics.FromImage( mapView.Image ) )
+      {
+        Point point = mapSquareIDToPos( selectedMapSquareID );
+        Rectangle rect = new Rectangle( point, chipSize );
+        g.DrawRectangle( Pens.Red, rect );
       }
 
       // 描画を反映
