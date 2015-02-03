@@ -84,6 +84,7 @@ namespace MapEditor
       // 左ボタンが押されていなければ何もしない
       if( e.Button != System.Windows.Forms.MouseButtons.Left ) return;
 
+      // モード変更
       isLocating = true;
 
       // チップを設置
@@ -104,6 +105,7 @@ namespace MapEditor
       // 左ボタンが離されたわけではないのなら何もしない
       if( e.Button != System.Windows.Forms.MouseButtons.Left ) return;
 
+      // モード変更
       isLocating = false;
     }
 
@@ -155,7 +157,7 @@ namespace MapEditor
       selectedChipXLabel.Text = "X:" + chipPosOnGrid.X.ToString();
       selectedChipYLabel.Text = "Y:" + chipPosOnGrid.Y.ToString();
 
-      // ビューの更新
+      // ビューを更新
       DrawChipsetView();
       DrawSelectedChipView();
     }
